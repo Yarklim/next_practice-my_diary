@@ -1,46 +1,63 @@
 import Image from 'next/image';
 
+import { weekDays } from '@/constants/weekDays';
+import DayState from '@/components/DayState';
+
 export default function Home() {
   const duties = {
-    'daily learn programming': {
+    'Daily learn programming': {
       '17.05.24': false,
       '18.05.24': true,
       '19.05.24': true,
     },
-    'daily coding': {
+    'Daily coding': {
       '17.05.24': false,
       '18.05.24': true,
       '19.05.24': true,
     },
-    'daily workout': {
+    'Daily workout': {
       '17.05.24': false,
       '18.05.24': true,
       '19.05.24': true,
     },
-    'walk 10 thousand steps': {
+    'Walk 10 thousand steps': {
       '17.05.24': true,
       '18.05.24': true,
       '19.05.24': true,
     },
-    'drink 2 liters of water': {
+    'Drink 2 liters of water': {
       '17.05.24': true,
       '18.05.24': true,
       '19.05.24': true,
     },
-    'meditation 30 min': {
+    'Meditation 30 min': {
       '17.05.24': true,
       '18.05.24': true,
       '19.05.24': true,
     },
-    'sleep at least 8 hours': {
+    'Sleep at least 8 hours': {
       '17.05.24': true,
       '18.05.24': true,
       '19.05.24': true,
     },
   };
 
+  const today = new Date();
+  const todayWeekDay = today.getDay();
+  const sortedWeekDays = weekDays
+    .slice(todayWeekDay)
+    .concat(weekDays.slice(0, todayWeekDay));
+  const last7Days = weekDays
+    .map((_, idx) => {
+      const date = new Date();
+      date.setDate(date.getDate() - idx);
+
+      return date.toISOString().slice(0, 10);
+    })
+    .reverse();
+
   return (
-    <main className="container relative flex flex-col gap-8 px-4 pt-5">
+    <main className="container relative flex flex-col gap-8 px-10 pt-12">
       {!duties ||
         (!Object.keys(duties).length && (
           <h1 className="mt-10 text-4xl font-light text-white font-display text-center">
@@ -63,6 +80,17 @@ export default function Home() {
                 />
               </button>
             </div>
+
+            <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">
+              {weekDays?.map((day) => (
+                <div key={day} className="flex flex-col">
+                  <span className="font-sans text-center text-xs text-white">
+                    {day}
+                  </span>
+                  <DayState day={undefined} />
+                </div>
+              ))}
+            </section>
           </div>
         ))}
     </main>
