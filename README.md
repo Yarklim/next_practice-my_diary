@@ -1,2 +1,5 @@
-# next_practice-my_diary
-Practice Project Next 14 - My Diary
+# Next Practice Project - My Diary  
+## Tech Stack:  
+- Next 14  
+- TypeScript  
+- Tailwind CSS  
