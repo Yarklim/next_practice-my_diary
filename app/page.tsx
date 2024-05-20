@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { weekDays } from '@/constants/weekDays';
 import DayState from '@/components/DayState';
+import DeleteButton from '@/components/DeleteButton';
 
 type DutySchedule = { [duty: string]: Record<string, boolean> } | null;
 
@@ -39,14 +40,7 @@ export default async function Home() {
               <span className="text-xl font-light text-white font-sans">
                 {duty}
               </span>
-              <button>
-                <Image
-                  src={'/icons/delete.svg'}
-                  width={20}
-                  height={20}
-                  alt="delete"
-                />
-              </button>
+              <DeleteButton duty={duty} />
             </div>
             <Link href={`duty/${duty}`}>
               <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">
