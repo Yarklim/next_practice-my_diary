@@ -1,46 +1,14 @@
+import { kv } from '@vercel/kv';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { weekDays } from '@/constants/weekDays';
 import DayState from '@/components/DayState';
 
-export default function Home() {
-  const duties = {
-    'Daily learn programming': {
-      '17.05.24': false,
-      '18.05.24': true,
-      '19.05.24': true,
-    },
-    'Daily coding': {
-      '17.05.24': false,
-      '18.05.24': true,
-      '19.05.24': true,
-    },
-    'Daily workout': {
-      '17.05.24': false,
-      '18.05.24': true,
-      '19.05.24': true,
-    },
-    'Walk 10 thousand steps': {
-      '17.05.24': true,
-      '18.05.24': true,
-      '19.05.24': true,
-    },
-    'Drink 2 liters of water': {
-      '17.05.24': true,
-      '18.05.24': true,
-      '19.05.24': true,
-    },
-    'Meditation 30 min': {
-      '17.05.24': true,
-      '18.05.24': true,
-      '19.05.24': true,
-    },
-    'Sleep at least 8 hours': {
-      '17.05.24': true,
-      '18.05.24': true,
-      '19.05.24': true,
-    },
-  };
+type DutySchedule = { [duty: string]: Record<string, boolean> } | null;
+
+export default async function Home() {
+  const duties: DutySchedule = (await kv.hgetall('duties')) as DutySchedule;
 
   const today = new Date();
   const todayWeekDay = today.getDay();
@@ -65,7 +33,7 @@ export default function Home() {
           </h1>
         ))}
       {duties &&
-        Object.entries(duties).map(([duty]) => (
+        Object.entries(duties).map(([duty, dutyTime]) => (
           <div key={duty} className="flex flex-col gap-2">
             <div className="flex justify-between items-center">
               <span className="text-xl font-light text-white font-sans">
@@ -80,19 +48,26 @@ export default function Home() {
                 />
               </button>
             </div>
-
-            <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">
-              {weekDays?.map((day) => (
-                <div key={day} className="flex flex-col">
-                  <span className="font-sans text-center text-xs text-white">
-                    {day}
-                  </span>
-                  <DayState day={undefined} />
-                </div>
-              ))}
-            </section>
+            <Link href={`duty/${duty}`}>
+              <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">
+                {sortedWeekDays?.map((day, idx) => (
+                  <div key={day} className="flex flex-col">
+                    <span className="font-sans text-center text-xs text-white">
+                      {day}
+                    </span>
+                    <DayState day={dutyTime[last7Days[idx]]} />
+                  </div>
+                ))}
+              </section>
+            </Link>
           </div>
         ))}
+      <Link
+        href="new-duty"
+        className="text-center w-2/3 mt-8 mx-auto text-neutral-900 bg-[#45EDAD] font-display font-regular text-2xl rounded-md"
+      >
+        Add new duty
+      </Link>
     </main>
   );
 }

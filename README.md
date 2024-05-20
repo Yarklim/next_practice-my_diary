@@ -3,3 +3,5 @@
 - Next 14  
 - TypeScript  
 - Tailwind CSS  
+- Vercel Deploy  
+- Vercel KV Database  
